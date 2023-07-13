@@ -56,4 +56,4 @@ SKY_COLOR = "#ddc6a1"
 SEA_COLOR = "#92a9ce"
 HORIZON_COLOR = "#f5f1de"
 HORIZON_TOP_COLOR = "#d1aa9d"
-LINE_COLOR = "black"
+LINE_COLOR = [17, 24, 39] # #111827

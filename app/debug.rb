@@ -4,6 +4,10 @@ class Debug
     render(args)
   end
 
+  def serialize
+    {}
+  end
+
   private
 
   def handle_input(args)
@@ -18,7 +22,11 @@ class Debug
 
   def build_labels(args)
     [
-      "FPS: #{args.gtk.current_framerate.to_sf}"
+      "FPS: #{args.gtk.current_framerate.to_sf}",
+      "Mouse: #{args.inputs.mouse.x.to_sf}, #{args.inputs.mouse.y.to_sf}",
+      "Editor Origin: #{args.state.editor&.origin}",
+      "Editor Panning?: #{args.state.editor&.panning?}",
+      "Editor Pan Offset: #{args.state.editor&.pan_offset}"
     ].map.with_index do |text, index|
       top = index * 20 + 10
 

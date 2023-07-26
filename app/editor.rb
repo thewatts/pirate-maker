@@ -28,7 +28,15 @@ class Editor
   end
 
   def pan_input(args)
+    if args.inputs.keyboard.key_held.space && !args.inputs.mouse.button_left
+      args.gtk.set_cursor "sprites/cursors/hand-small.png", 12, 12
+    else
+      args.gtk.set_cursor "sprites/cursors/mouse.png"
+    end
+
     if args.inputs.keyboard.key_held.space && args.inputs.mouse.button_left
+      args.gtk.set_cursor "sprites/cursors/hand-grab-small.png", 12, 12
+
       mouse_position = Vector.new(args.inputs.mouse.x, args.inputs.mouse.y)
 
       if panning?

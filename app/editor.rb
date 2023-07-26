@@ -1,14 +1,16 @@
 # rubocop:disable Style/RedundantFileExtensionInRequire
 require_relative "vector.rb"
+require_relative "editor/menu.rb"
 
 class Editor
-  attr_reader :origin, :selection_index
+  attr_reader :origin, :selection_index, :menu
 
   def initialize
     @origin = Vector.new(0, 0)
     @pan_offset = Vector.new(0, 0)
     @panning = false
     @selection_index = 2
+    @menu = Editor::Menu.new
   end
 
   def draw_tile_lines(args)
@@ -70,6 +72,7 @@ class Editor
     pan_input(args)
     selection_hotkeys(args.inputs.keyboard.key_down)
     draw_tile_lines(args)
+    menu.render(args)
 
     args.outputs.solids << [origin.x, origin.y, 10, 10, 255, 0, 0, 255]
   end

@@ -1,12 +1,14 @@
-require_relative "vector"
+# rubocop:disable Style/RedundantFileExtensionInRequire
+require_relative "vector.rb"
 
 class Editor
-  attr_reader :origin
+  attr_reader :origin, :selection_index
 
   def initialize
     @origin = Vector.new(0, 0)
     @pan_offset = Vector.new(0, 0)
     @panning = false
+    @selection_index = 2
   end
 
   def draw_tile_lines(args)
@@ -52,8 +54,21 @@ class Editor
     end
   end
 
+  def selection_hotkeys(key_down)
+    return unless key_down.right || key_down.left
+
+    new_selection = if key_down.right
+      selection_index + 1
+    elsif key_down.left
+      selection_index - 1
+    end
+
+    self.selection_index = new_selection.clamp(2, 18)
+  end
+
   def tick(args)
     pan_input(args)
+    selection_hotkeys(args.inputs.keyboard.key_down)
     draw_tile_lines(args)
 
     args.outputs.solids << [origin.x, origin.y, 10, 10, 255, 0, 0, 255]
@@ -61,8 +76,9 @@ class Editor
 
   private
 
-  attr_writer :origin
+  attr_writer :origin, :selection_index
   attr_accessor :panning, :pan_offset
 
   alias_method :panning?, :panning
 end
+# rubocop:enable Style/RedundantFileExtensionInRequire

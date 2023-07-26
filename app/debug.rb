@@ -18,6 +18,7 @@ class Debug
     labels = build_labels(args)
 
     args.outputs.labels << labels
+    # args.outputs.primitives << args.gtk.current_framerate_primitives
   end
 
   def build_labels(args)

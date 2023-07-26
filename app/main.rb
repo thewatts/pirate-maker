@@ -1,7 +1,6 @@
 # rubocop:disable Style/RedundantFileExtensionInRequire
 require "app/settings.rb"
 require "app/debug.rb"
-require "app/vector.rb"
 require "app/editor.rb"
 
 def tick(args)

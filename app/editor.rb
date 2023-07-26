@@ -1,3 +1,5 @@
+require_relative "vector"
+
 class Editor
   attr_reader :origin
 

@@ -1,5 +1,6 @@
 # rubocop:disable Style/RedundantFileExtensionInRequire
 require_relative "button.rb"
+require "app/settings.rb"
 
 class Editor
   class Menu
@@ -21,94 +22,60 @@ class Editor
       margin.from_bottom
     end
 
-    def background
-      {
-        x: x,
-        y: y,
-        w: size,
-        h: size,
-        r: 255,
-        g: 0,
-        b: 0,
-        a: 255
+    def data
+      EDITOR_DATA.select { |id, values|
+        !!values[:menu]
+      }.each_with_object({}) { |(id, values), hash|
+        menu_id = values[:menu]
+        path = values[:menu_surf]
+
+        hash[menu_id] ||= []
+        hash[menu_id] << {id: id, path: path}
       }
     end
 
     def tile_button
       Button.new(
+        menu: self,
         x: left + button_margin / 2,
         y: bottom + button_margin / 2 + size / 2,
-        w: size / 2 - button_margin,
-        h: size / 2 - button_margin,
-        r: 0,
-        g: 0,
-        b: 255,
-        a: 255
+        items: data.fetch("terrain")
       )
     end
 
     def coin_button
       Button.new(
+        menu: self,
         x: left + size / 2 + button_margin / 2,
         y: bottom + button_margin / 2 + size / 2,
-        w: size / 2 - button_margin,
-        h: size / 2 - button_margin,
-        r: 0,
-        g: 255,
-        b: 0,
-        a: 255
+        items: data.fetch("coin")
       )
     end
 
     def palm_button
       Button.new(
+        menu: self,
         x: left + button_margin / 2,
         y: bottom + button_margin / 2,
-        w: size / 2 - button_margin,
-        h: size / 2 - button_margin,
-        r: 255,
-        g: 255,
-        b: 0,
-        a: 255
+        items: data.fetch("palm fg"),
+        items_alt: data.fetch("palm bg")
       )
     end
 
     def enemy_button
       Button.new(
+        menu: self,
         x: left + size / 2 + button_margin / 2,
         y: bottom + button_margin / 2,
-        w: size / 2 - button_margin,
-        h: size / 2 - button_margin,
-        r: 255,
-        g: 255,
-        b: 255,
-        a: 255
+        items: data.fetch("enemy")
       )
     end
 
     def render(args)
-      args.outputs.solids << background
-      args.outputs.solids << tile_button
-      args.outputs.solids << coin_button
-      args.outputs.solids << palm_button
-      args.outputs.solids << enemy_button
-    end
-
-    private
-
-    def base_button
-      {
-        x: left,
-        y: bottom + size / 2,
-        w: size / 2,
-        h: size / 2,
-        r: 0,
-        g: 255,
-        b: 0,
-        a: 255
-      }
-
-      # Rectangle.new(x: left, y: bottom + size / 2, w: size / 2, h: size / 2, color: [0, 255, 0, 255])
+      tile_button.render(args)
+      coin_button.render(args)
+      palm_button.render(args)
+      enemy_button.render(args)
     end
   end
 end

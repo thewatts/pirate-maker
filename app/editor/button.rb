@@ -2,9 +2,10 @@ class Editor
   class Button
     attr_sprite
 
-    attr_reader :group, :items, :margin, :menu
+    attr_reader :name, :group, :items, :margin, :menu
 
-    def initialize(menu:, x:, y:, items: [], items_alt: nil)
+    def initialize(name:, menu:, x:, y:, items: [], items_alt: nil)
+      @name = name
       @margin = menu.button_margin
       @menu = menu
       @x = x
@@ -42,7 +43,7 @@ class Editor
         source_h: height,
         path: icon_path,
         anchor_x: 0.5,
-        anchor_y: 0.5,
+        anchor_y: 0.5
       }
     end
 

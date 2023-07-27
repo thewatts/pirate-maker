@@ -33,6 +33,12 @@ class Editor
     end
   end
 
+  def menu_click(mouse)
+    if mouse.click && mouse.inside_rect?(menu.rect)
+      menu.click(mouse)
+    end
+  end
+
   def pan_input(args)
     if args.inputs.keyboard.key_held.space && !args.inputs.mouse.button_left
       args.gtk.set_cursor "sprites/cursors/hand-small.png", 12, 12
@@ -71,6 +77,8 @@ class Editor
   def tick(args)
     pan_input(args)
     selection_hotkeys(args.inputs.keyboard.key_down)
+    menu_click(args.inputs.mouse)
+
     draw_tile_lines(args)
     menu.render(args)
 

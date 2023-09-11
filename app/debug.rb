@@ -23,7 +23,8 @@ class Debug
 
   def build_labels(args)
     [
-      "FPS: #{args.gtk.current_framerate.to_sf}"
+      "FPS: #{args.gtk.current_framerate.to_sf}",
+      "Selection Index: #{args.state.editor.selection_index}"
     ].map.with_index do |text, index|
       top = index * 20 + 10
 

@@ -1,12 +1,16 @@
-require_relative "vector"
+# rubocop:disable Style/RedundantFileExtensionInRequire
+require_relative "vector.rb"
+require_relative "editor/menu.rb"
 
 class Editor
-  attr_reader :origin
+  attr_reader :origin, :selection_index, :menu
 
   def initialize
     @origin = Vector.new(0, 0)
     @pan_offset = Vector.new(0, 0)
     @panning = false
+    @selection_index = 2
+    @menu = Editor::Menu.new
   end
 
   def draw_tile_lines(args)
@@ -26,6 +30,12 @@ class Editor
     (rows + 1).times do |row|
       y = offset_vector.y + row * TILE_SIZE
       args.outputs.lines << [0, y, args.grid.w, y, *LINE_COLOR, 30]
+    end
+  end
+
+  def menu_click(mouse)
+    if mouse.click && mouse.inside_rect?(menu.rect)
+      menu.click(mouse)
     end
   end
 
@@ -52,17 +62,34 @@ class Editor
     end
   end
 
+  def selection_hotkeys(key_down)
+    return unless key_down.right || key_down.left
+
+    new_selection = if key_down.right
+      selection_index + 1
+    elsif key_down.left
+      selection_index - 1
+    end
+
+    self.selection_index = new_selection.clamp(2, 18)
+  end
+
   def tick(args)
     pan_input(args)
+    selection_hotkeys(args.inputs.keyboard.key_down)
+    menu_click(args.inputs.mouse)
+
     draw_tile_lines(args)
+    menu.render(args)
 
     args.outputs.solids << [origin.x, origin.y, 10, 10, 255, 0, 0, 255]
   end
 
   private
 
-  attr_writer :origin
+  attr_writer :origin, :selection_index
   attr_accessor :panning, :pan_offset
 
   alias_method :panning?, :panning
 end
+# rubocop:enable Style/RedundantFileExtensionInRequire
